@@ -1,24 +1,24 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import React from "react";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
-import * as actions from '../actions';
+import * as actions from "../actions";
 
 const useStyles = makeStyles((theme) => ({
   toolbox: {
-    display: 'flex',
+    display: "flex",
   },
   dashboardButton: {
     flexGrow: 1,
     marginLeft: theme.spacing(2),
   },
   link: {
-    color: 'white',
-    '&:hover': {
-      color: 'white',
-      textDecoration: 'none',
+    color: "white",
+    "&:hover": {
+      color: "white",
+      textDecoration: "none",
     },
   },
 }));
@@ -32,15 +32,22 @@ const Header = (props) => {
     <div>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">CodeWorkr API Auth</Typography>
+          <Typography variant="h6">GPW Trader Panel</Typography>
 
           <div className={classes.dashboardButton}>
             {props.isAuth ? (
-              <Button>
-                <Link to="/dashboard" className={classes.link}>
-                  Dashboard
-                </Link>
-              </Button>
+              <div>
+                <Button>
+                  <Link to="/all-shares" className={classes.link}>
+                    Akcje
+                  </Link>
+                </Button>
+                <Button>
+                  <Link to="/bought-shares" className={classes.link}>
+                    Portfel
+                  </Link>
+                </Button>
+              </div>
             ) : null}
           </div>
 

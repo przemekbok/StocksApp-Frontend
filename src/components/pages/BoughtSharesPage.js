@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
+import { connect } from "react-redux";
+import * as actions from "../../actions/index";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -15,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BoughtSharesPage() {
+function BoughtSharesPage() {
   const classes = useStyles();
 
   const [data, setData] = useState([]);
@@ -50,7 +52,7 @@ export default function BoughtSharesPage() {
 
   return (
     <React.Fragment>
-      <div className={classes.root}> 
+      <div className={classes.root}>
         <TextField
           id="outlined-basic"
           label="Wyszukaj spółkę"
@@ -68,3 +70,11 @@ export default function BoughtSharesPage() {
     </React.Fragment>
   );
 }
+
+function mapStateToProps(state) {
+  return {
+    secret: state.dash.secret,
+  };
+}
+
+export default connect(mapStateToProps, actions)(BoughtSharesPage);
