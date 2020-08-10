@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Field, reduxForm } from "redux-form";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import * as actions from "../actions";
+import * as actions from "../../actions";
 
-import CustomInput from "./CustomInput";
+import CustomInput from "../CustomInput";
 import { Alert } from "@material-ui/lab";
 import { Button, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -26,39 +26,52 @@ const useStyles = makeStyles((theme) => ({
   header: {
     marginBottom: theme.spacing(4),
   },
+  fieldset: {
+    width: "400px",
+    display: "flex",
+    flexDirection: "column",
+  },
+  textfieldTop: {
+    margin: theme.spacing(3, 0, 0),
+  },
+  textfieldBottom: {
+    margin: theme.spacing(3, 0, 3),
+  },
 }));
 
-const SignIn = (props) => {
+const AddCredentialsPage = (props) => {
   const classes = useStyles();
-  const { handleSubmit } = props;
-  const onSubmit = async (formData) => {
-    props.signIn(formData).then(() => {
-      if (!props.errorMessage) {
-        props.history.push("/all-shares");
-      }
-    });
+  const { handleSubmit, email, password } = props;
+  const onSubmit = (formData) => {
+    props.setCredentials(formData);
   };
+
+  useEffect(() => {
+    console.log("jakie propsy?", props);
+    props.initialize({ email, password });
+  }, []);
+
   return (
     <div className={classes.paper}>
-      <Typography variant="h3" className={classes.header}>
-        Sign in
+      <Typography variant="h6" className={classes.header}>
+        Twoje dane do logowania w serwisie GPWTrader
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <fieldset>
+        <fieldset className={classes.fieldset}>
           <Field
+            className={classes.textfieldTop}
             name="email"
             type="text"
             id="email"
-            label="Enter your email"
-            placeholder="example@example.com"
+            placeholder="Twój email"
             component={CustomInput}
           />
           <Field
+            className={classes.textfieldBottom}
             name="password"
-            type="password"
+            type="text"
             id="password"
-            label="Enter your password"
-            placeholder=""
+            placeholder="Twoje hasło"
             component={CustomInput}
           />
         </fieldset>
@@ -72,20 +85,24 @@ const SignIn = (props) => {
           fullWidth
           className={classes.submit}
         >
-          Sign In
+          Zapisz dane
         </Button>
       </form>
     </div>
   );
 };
 
+//TODO: Do redux for data
+
 function mapStateToProps(state) {
   return {
-    errorMessage: state.auth.errorMessage,
+    email: state.credentials.email,
+    password: state.credentials.password,
+    errorMessage: state.credentials.errorMessage,
   };
 }
 
 export default compose(
   connect(mapStateToProps, actions),
-  reduxForm({ form: "signin" })
-)(SignIn);
+  reduxForm({ form: "credentials" }) //we are naming redux form for redux form reducer
+)(AddCredentialsPage);

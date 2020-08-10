@@ -35,7 +35,7 @@ const Header = (props) => {
           <Typography variant="h6">GPW Trader Panel</Typography>
 
           <div className={classes.dashboardButton}>
-            {props.isAuth ? (
+            {props.isAuthenticated ? (
               <div>
                 <Button>
                   <Link to="/all-shares" className={classes.link}>
@@ -51,7 +51,7 @@ const Header = (props) => {
             ) : null}
           </div>
 
-          {!props.isAuth ? (
+          {!props.isAuthenticated ? (
             <div>
               <Button>
                 <Link to="/signup" className={classes.link}>
@@ -65,12 +65,19 @@ const Header = (props) => {
               </Button>
             </div>
           ) : null}
-          {props.isAuth ? (
-            <Button>
-              <Link to="/signout" className={classes.link} onClick={signOut}>
-                Log Out
-              </Link>
-            </Button>
+          {props.isAuthenticated ? (
+            <div>
+              <Button>
+                <Link to="/credentials" className={classes.link}>
+                  Credentails
+                </Link>
+              </Button>
+              <Button>
+                <Link to="/signout" className={classes.link} onClick={signOut}>
+                  Log Out
+                </Link>
+              </Button>
+            </div>
           ) : null}
         </Toolbar>
       </AppBar>
@@ -80,7 +87,7 @@ const Header = (props) => {
 
 function mapStateToProps(state) {
   return {
-    isAuth: state.auth.isAuthenticated,
+    isAuthenticated: state.auth.isAuthenticated,
   };
 }
 

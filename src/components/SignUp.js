@@ -1,23 +1,23 @@
-import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import * as actions from '../actions';
+import React from "react";
+import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import * as actions from "../actions";
 
-import CustomInput from './CustomInput';
-import { Alert } from '@material-ui/lab';
-import { Button, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import CustomInput from "./CustomInput";
+import { Alert } from "@material-ui/lab";
+import { Button, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   form: {
-    width: '100%',
+    width: "100%",
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -34,7 +34,7 @@ const SignUp = (props) => {
   const onSubmit = async (formData) => {
     await props.signUp(formData);
     if (!props.errorMessage) {
-      props.history.push('/dashboard');
+      props.history.push("/all-shares");
     }
   };
   return (
@@ -86,5 +86,5 @@ function mapStateToProps(state) {
 
 export default compose(
   connect(mapStateToProps, actions),
-  reduxForm({ form: 'signup' })
+  reduxForm({ form: "signup" })
 )(SignUp);

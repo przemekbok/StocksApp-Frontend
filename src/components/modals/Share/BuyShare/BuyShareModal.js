@@ -139,7 +139,6 @@ export default function BuyShareModal(props) {
                 token,
               };
               let dataAsJson = JSON.stringify(data);
-              console.log(dataAsJson);
             }}
           >
             {(props) => {

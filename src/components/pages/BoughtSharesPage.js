@@ -17,21 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BoughtSharesPage() {
+function BoughtSharesPage(props) {
   const classes = useStyles();
-
   const [data, setData] = useState([]);
   const [header, setHeader] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    getBoughtShares().then((response) => {
-      setData(response);
-    });
-    getHeader("shares").then((response) => {
-      setHeader(response);
-    });
+    if (props.isSet) {
+      getBoughtShares().then((response) => {
+        setData(response);
+      });
+      getHeader("shares").then((response) => {
+        setHeader(response);
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ function BoughtSharesPage() {
     }
   };
 
-  return (
+  return props.isSet ? (
     <React.Fragment>
       <div className={classes.root}>
         <TextField
@@ -68,12 +69,17 @@ function BoughtSharesPage() {
         header={header}
       />
     </React.Fragment>
+  ) : (
+    <div>
+      Nie podałeś danych do dostępu! Formularz znajdziesz w zakładce
+      "credentials"
+    </div>
   );
 }
 
 function mapStateToProps(state) {
   return {
-    secret: state.dash.secret,
+    isSet: state.credentials.isSet,
   };
 }
 

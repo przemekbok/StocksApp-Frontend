@@ -1,14 +1,18 @@
+import axios from "axios";
+
+/**TODO: Change fetching mechanism to axios*/
+
 export function getCompanies(page, size) {
   let query =
     page === undefined || size === undefined
       ? ""
       : `?page=${page}&size=${size}`;
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:9001/companies" + query)
-      .then((response) => response.json())
+    axios
+      .get("http://localhost:9001/companies" + query)
       .then((response) => {
         let rows = [];
-        response.forEach((company) => {
+        response.data.forEach((company) => {
           let row = [company.isin, company.name, ...company.params];
           rows.push(row);
         });
@@ -22,10 +26,10 @@ export function getCompanies(page, size) {
 
 export function getHeader(type) {
   return new Promise((resolve, reject) => {
-    fetch(`http://localhost:9001/headers?header=${type}`)
-      .then((response) => response.json())
+    axios
+      .get(`http://localhost:9001/headers?header=${type}`)
       .then((response) => {
-        resolve(response[0].fields);
+        resolve(response.data[0].fields);
       })
       .catch((err) => {
         reject(err);
@@ -35,8 +39,8 @@ export function getHeader(type) {
 
 export function getNumberOfCompanies() {
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:9001/companies/number")
-      .then((response) => response.json())
+    axios
+      .get("http://localhost:9001/companies/number")
       .then((response) => {
         resolve(response);
       })
@@ -48,8 +52,8 @@ export function getNumberOfCompanies() {
 
 export function getCompanyData(tag, interval) {
   return new Promise((resolve, reject) => {
-    fetch(`http://localhost:9000/stooqAPI?tag=${tag}&interval=${interval}`)
-      .then((response) => response.json())
+    axios
+      .get(`http://localhost:9000/stooqAPI?tag=${tag}&interval=${interval}`)
       .then((response) => {
         resolve(response);
       })
@@ -61,8 +65,9 @@ export function getCompanyData(tag, interval) {
 
 export function getBoughtShares() {
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:9001/shares")
-      .then((response) => response.json())
+    axios
+      .get(`http://localhost:9001/shares/`)
+      .then((response) => response.data)
       .then((response) => resolve(response))
       .catch((err) => {
         reject(err);

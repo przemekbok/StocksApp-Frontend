@@ -71,10 +71,4 @@ function AllCompaniesPage() {
   );
 }
 
-function mapStateToProps(state) {
-  return {
-    secret: state.dash.secret,
-  };
-}
-
-export default connect(mapStateToProps, actions)(AllCompaniesPage);
+export default connect(null, actions)(AllCompaniesPage);
