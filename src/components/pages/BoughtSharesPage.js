@@ -4,21 +4,30 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/index";
 
 import { makeStyles } from "@material-ui/core/styles";
+import { CircularProgress } from "@material-ui/core";
 
 import Table from "../tables/Table";
 import ShareRow from "../tables/rows/ShareRow";
 import ShareHeader from "../tables/headers/ShareHeader";
 
 import { getBoughtShares, getHeader } from "../../logic/fetching";
+import MessagePage from "./MesagePage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(0, 0, 3),
   },
+  progressContainer: {
+    marginTop: theme.spacing(16),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
 }));
 
 function BoughtSharesPage(props) {
   const classes = useStyles();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
   const [header, setHeader] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -28,6 +37,7 @@ function BoughtSharesPage(props) {
     if (props.isSet) {
       getBoughtShares().then((response) => {
         setData(response);
+        setIsLoading(false);
       });
       getHeader("shares").then((response) => {
         setHeader(response);
@@ -52,28 +62,34 @@ function BoughtSharesPage(props) {
   };
 
   return props.isSet ? (
-    <React.Fragment>
-      <div className={classes.root}>
-        <TextField
-          id="outlined-basic"
-          label="Wyszukaj spółkę"
-          variant="outlined"
-          size="small"
-          onKeyDown={handleChange}
-        />
+    isLoading ? (
+      <div className={classes.progressContainer}>
+        <CircularProgress />
       </div>
-      <Table
-        CustomTableRow={ShareRow}
-        CustomTableHeader={ShareHeader}
-        data={filteredData}
-        header={header}
-      />
-    </React.Fragment>
+    ) : (
+      <React.Fragment>
+        <div className={classes.root}>
+          <TextField
+            id="outlined-basic"
+            label="Wyszukaj spółkę"
+            variant="outlined"
+            size="small"
+            onKeyDown={handleChange}
+          />
+        </div>
+        <Table
+          CustomTableRow={ShareRow}
+          CustomTableHeader={ShareHeader}
+          data={filteredData}
+          header={header}
+        />
+      </React.Fragment>
+    )
   ) : (
-    <div>
-      Nie podałeś danych do dostępu! Formularz znajdziesz w zakładce
-      "credentials"
-    </div>
+    <MessagePage
+      message='Nie podałeś danych do dostępu! Formularz znajdziesz w zakładce
+    \"credentials\"'
+    />
   );
 }
 

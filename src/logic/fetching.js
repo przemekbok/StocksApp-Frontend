@@ -29,20 +29,7 @@ export function getHeader(type) {
     axios
       .get(`http://localhost:9001/headers?header=${type}`)
       .then((response) => {
-        resolve(response.data[0].fields);
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
-}
-
-export function getNumberOfCompanies() {
-  return new Promise((resolve, reject) => {
-    axios
-      .get("http://localhost:9001/companies/number")
-      .then((response) => {
-        resolve(response);
+        resolve(response.data.fields);
       })
       .catch((err) => {
         reject(err);

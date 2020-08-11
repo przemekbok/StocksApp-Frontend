@@ -55,12 +55,12 @@ const Header = (props) => {
             <div>
               <Button>
                 <Link to="/signup" className={classes.link}>
-                  Sign Up
+                  Zarejestruj się
                 </Link>
               </Button>
               <Button>
                 <Link to="/signin" className={classes.link}>
-                  Sign In
+                  Zaloguj się
                 </Link>
               </Button>
             </div>
@@ -69,12 +69,12 @@ const Header = (props) => {
             <div>
               <Button>
                 <Link to="/credentials" className={classes.link}>
-                  Credentails
+                  Dane
                 </Link>
               </Button>
               <Button>
                 <Link to="/signout" className={classes.link} onClick={signOut}>
-                  Log Out
+                  Wyloguj się
                 </Link>
               </Button>
             </div>

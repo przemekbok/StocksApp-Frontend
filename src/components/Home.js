@@ -1,5 +1,6 @@
-import React from 'react';
+import React from "react";
+import MessagePage from "./pages/MesagePage";
 
 export default () => {
-  return <div>Welcome to our home page!</div>;
+  return <MessagePage message="Welcome to our home page!" />;
 };
