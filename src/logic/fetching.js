@@ -61,3 +61,15 @@ export function getBoughtShares() {
       });
   });
 }
+
+export function getStatus() {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`http://localhost:9001/status/`)
+      .then((response) => response.data)
+      .then((response) => resolve(response))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}

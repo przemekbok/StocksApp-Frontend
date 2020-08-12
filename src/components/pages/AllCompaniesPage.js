@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@material-ui/core/TextField";
+import { TextField, Box, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import * as actions from "../../actions/index";
 
-import { makeStyles } from "@material-ui/core/styles";
+//import { makeStyles } from "@material-ui/core";
 
 import Table from "../tables/Table";
 import CompanyRow from "../tables/rows/CompanyRow";
@@ -13,7 +13,15 @@ import { getCompanies, getHeader } from "../../logic/fetching";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(0, 0, 3),
+    padding: theme.spacing(0, 0, 1),
+  },
+  filter: {
+    margin: theme.spacing(1, 0, 0),
+  },
+  label: {
+    "font-family": theme.typography.button.fontFamily,
+    padding: theme.spacing(2.5, 2, 1, 1),
+    "text-transform": "uppercase",
   },
 }));
 
@@ -53,13 +61,17 @@ function AllCompaniesPage() {
   return (
     <React.Fragment>
       <div className={classes.root}>
-        <TextField
-          id="outlined-basic"
-          label="Wyszukaj spółkę"
-          variant="outlined"
-          size="small"
-          onKeyDown={handleChange}
-        />
+        <Box display="flex" justifyContent="flex-start">
+          <div className={classes.label}>Filtr:</div>
+          <TextField
+            id="outlined-basic"
+            label="Wyszukaj spółkę"
+            variant="outlined"
+            size="small"
+            onKeyDown={handleChange}
+            className={classes.filter}
+          />
+        </Box>
       </div>
       <Table
         CustomTableRow={CompanyRow}
