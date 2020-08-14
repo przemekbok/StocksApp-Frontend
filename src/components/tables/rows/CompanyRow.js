@@ -9,11 +9,12 @@ import BuyShareButtonWithModal from "../../buttons/BuyShareButtonWithModal";
 
 export default function CompanyRow(props) {
   const { row } = props;
+  console.log(row);
   return (
     <TableRow key={row[0]}>
       <StyledTableCell>
         <ChartModalPanel tag={row[0].substr(2, 3)} name={row[1]} />
-        <BuyShareButtonWithModal name={row[1]}/>
+        <BuyShareButtonWithModal name={row[1]} isin={row[0]} />
       </StyledTableCell>
       <StyledTableCell component="th" scope="row">
         {row[1]}

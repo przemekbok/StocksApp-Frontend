@@ -8,6 +8,8 @@ import {
   CREDENTIALS_GET,
   CREDENTIALS_SET,
   CREDENTIALS_ERROR,
+  BUY_SHARES,
+  SELL_SHARES,
 } from "./types";
 
 export const signUp = (data) => {
@@ -147,6 +149,42 @@ export const setCredentials = (data) => {
         payload: err,
       });
       console.error("err", err);
+    }
+  };
+};
+
+export const buyShares = (data) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.post(
+        `http://localhost:9001/trade/buy`, //token is provided via axios.default
+        data
+      );
+
+      dispatch({
+        type: BUY_SHARES,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log("err", error);
+    }
+  };
+};
+
+export const sellShares = (data) => {
+  return async (dispatch) => {
+    try {
+      const res = await axios.post(
+        `http://localhost:9001/trade/sell`, //token is provided via axios.default
+        data
+      );
+
+      dispatch({
+        type: SELL_SHARES,
+        payload: res.data,
+      });
+    } catch (error) {
+      console.log("err", error);
     }
   };
 };

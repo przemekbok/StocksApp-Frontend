@@ -20,6 +20,10 @@ import DateFnsUtils from "@date-io/date-fns";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Formik, Form, useField } from "formik";
+import * as actions from "../../../../actions";
+
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -85,8 +89,8 @@ const FormikInput = (props) => {
   return <TextField {...field} {...props} />;
 };
 
-export default function BuyShareModal(props) {
-  const { name } = props;
+function BuyShareModal(props) {
+  const { name, isin } = props;
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
@@ -127,18 +131,18 @@ export default function BuyShareModal(props) {
               validityTime: null,
             }}
             onSubmit={(values, { setSubmitting }) => {
-              let token = localStorage.getItem("JWT_TOKEN");
               let data = {
-                name,
-                volume: values.volume,
+                isin,
+                wolumen: values.volume,
                 type: values.type,
                 validity: values.validity,
                 limit: values.limit,
                 activationLevel: values.activationLevel,
                 validityTime: values.validityTime,
-                token,
               };
-              let dataAsJson = JSON.stringify(data);
+              props.buyShares(data).then(() => {
+                console.log("done");
+              });
             }}
           >
             {(props) => {
@@ -241,3 +245,9 @@ export default function BuyShareModal(props) {
     </Modal>
   );
 }
+
+function mapStateToProps(state) {
+  return {};
+}
+
+export default compose(connect(mapStateToProps, actions))(BuyShareModal);

@@ -1,25 +1,37 @@
 import React, { useState, useEffect } from "react";
 
 import Modal from "@material-ui/core/Modal";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import NativeSelect from "@material-ui/core/NativeSelect";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import AppBar from "@material-ui/core/AppBar";
-import Container from "@material-ui/core/Container"
+import Container from "@material-ui/core/Container";
+import { FormLabel } from "@material-ui/core";
+
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+  KeyboardTimePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useFormik } from "formik";
+import { Formik, Form, useField } from "formik";
+import * as actions from "../../../../actions";
+
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    // display: "flex",
+    display: "flex",
     // alignItems: "center",
     // justifyContent: "center",
-    // flexDirection: 'column',
+    flexDirection: "row",
+    alignItems: "center",
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
@@ -28,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
     // width: "300px",
     // height: "400px",
-    marginTop: theme.spacing(8),
+    //marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -41,11 +53,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: 'column',
+    flexDirection: "column",
   },
-  button:{
+  formControl: {
     marginTop: theme.spacing(4),
-  }
+  },
+  button: {
+    marginTop: theme.spacing(4),
+  },
 }));
 
 const types = {
@@ -64,24 +79,28 @@ const validity = {
   WNZ: "Na zamknięcie (WNZ)",
 };
 
-export default function BuyShareModal(props) {
-  const { name } = props;
+const FormikSelect = (props) => {
+  const [field, meta] = useField(props);
+  return <NativeSelect {...field} {...props} />;
+};
+
+const FormikInput = (props) => {
+  const [field, meta] = useField(props);
+  return <TextField {...field} {...props} />;
+};
+
+function SellShareModal(props) {
+  const { name, isin } = props;
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
-  const formik = useFormik({
-    initialValues: {
-      instrument: "",
-      volume: 1,
-      type: "Wybierz",
-      validity: "Wybierz",
-    },
-    onSubmit: (values) => {},
-  });
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
 
   const handleClose = () => {
     setOpen(false);
-    props.open = false;
   };
 
   useEffect(() => {
@@ -91,40 +110,142 @@ export default function BuyShareModal(props) {
   }, [props.open]);
 
   return (
-    <Modal open={open} onClose={handleClose} onBackdropClick={handleClose} className={classes.modal}>
-      <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <AppBar position="static">
-          <Typography variant="h6">{name}</Typography>
-        </AppBar>
-        <form className={classes.form}>
-          <FormControl fullWidth>
-            <TextField value={1} />
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>Typ</InputLabel>
-            <NativeSelect>
-              <option aria-label="None" value=""></option>
-              {Object.keys(types).map((key) => (
-                <option value={key}>{types[key]}</option>
-              ))}
-            </NativeSelect>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>Ważność</InputLabel>
-            <NativeSelect >
-            <option aria-label="None" value=""></option>
-              {Object.keys(validity).map((key) => (
-                <option value={key}>{validity[key]}</option>
-              ))}
-            </NativeSelect>
-          </FormControl>
-          <Button fullWidth className={classes.button} type="submit" color="primary">
-            Sprzedaj
-          </Button>
-        </form>
-      </div>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      onBackdropClick={handleClose}
+      className={classes.modal}
+    >
+      <Container className={classes.modal} component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <AppBar position="static">
+            <Typography variant="h6">{name}</Typography>
+          </AppBar>
+          <Formik
+            initialValues={{
+              volume: 1,
+              type: "Wybierz",
+              validity: "Wybierz",
+              limit: null,
+              activationLevel: null,
+              validityTime: null,
+            }}
+            onSubmit={(values, { setSubmitting }) => {
+              let data = {
+                isin,
+                wolumen: values.volume,
+                type: values.type,
+                validity: values.validity,
+                limit: values.limit,
+                activationLevel: values.activationLevel,
+                validityTime: values.validityTime,
+              };
+              props.sellShares(data);
+            }}
+          >
+            {(props) => {
+              const { values } = props;
+              return (
+                <Form className={classes.form}>
+                  <FormControl className={classes.formControl} fullWidth>
+                    <FormLabel>Ilość</FormLabel>
+                    <FormikInput name="volume" />
+                  </FormControl>
+                  <FormControl className={classes.formControl} fullWidth>
+                    <FormLabel>Typ</FormLabel>
+                    <FormikSelect name="type">
+                      <option aria-label="None" value="">
+                        Wybierz
+                      </option>
+                      {Object.keys(types).map((key) => (
+                        <option value={key}>{types[key]}</option>
+                      ))}
+                    </FormikSelect>
+                  </FormControl>
+                  {values.type === "LIMIT" || values.type === "STOP_LIMIT" ? (
+                    <FormControl className={classes.formControl} fullWidth>
+                      <FormLabel>Limit</FormLabel>
+                      <FormikInput name="limit" />
+                    </FormControl>
+                  ) : null}
+                  {values.type === "STOP_LIMIT" ||
+                  values.type === "STOP_LOSS" ? (
+                    <FormControl className={classes.formControl} fullWidth>
+                      <FormLabel>Limit aktywacji</FormLabel>
+                      <FormikInput name="activationLevel" />
+                    </FormControl>
+                  ) : null}
+                  <FormControl className={classes.formControl} fullWidth>
+                    <FormLabel>Ważność</FormLabel>
+                    <FormikSelect name="validity">
+                      <option aria-label="None" value="">
+                        Wybierz
+                      </option>
+                      {Object.keys(validity).map((key) => (
+                        <option value={key}>{validity[key]}</option>
+                      ))}
+                    </FormikSelect>
+                  </FormControl>
+                  {values.validity.includes("WDC") ||
+                  values.validity.includes("WDD") ? (
+                    <FormControl className={classes.formControl} fullWidth>
+                      <FormLabel>Ważność</FormLabel>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        {values.validity.includes("WDD") ? (
+                          <KeyboardDatePicker
+                            disableToolbar
+                            variant="inline"
+                            format="dd:MM:yyyy"
+                            margin="normal"
+                            id="date-picker-inline"
+                            label="Date picker inline"
+                            value={values.validityTime}
+                            onChange={(value) =>
+                              props.setFieldValue("validityTime", value)
+                            }
+                            KeyboardButtonProps={{
+                              "aria-label": "change date",
+                            }}
+                          />
+                        ) : null}
+                        {values.validity.includes("WDC") ? (
+                          <KeyboardTimePicker
+                            margin="normal"
+                            id="time-picker"
+                            label="Time picker"
+                            value={values.validityTime}
+                            onChange={(value) =>
+                              props.setFieldValue("validityTime", value)
+                            }
+                            KeyboardButtonProps={{
+                              "aria-label": "change time",
+                            }}
+                          />
+                        ) : null}
+                      </MuiPickersUtilsProvider>
+                    </FormControl>
+                  ) : null}
+
+                  <Button
+                    fullWidth
+                    className={classes.button}
+                    type="submit"
+                    color="primary"
+                  >
+                    Kup
+                  </Button>
+                </Form>
+              );
+            }}
+          </Formik>
+        </div>
       </Container>
     </Modal>
   );
 }
+
+function mapStateToProps(state) {
+  return {};
+}
+
+export default compose(connect(mapStateToProps, actions))(SellShareModal);

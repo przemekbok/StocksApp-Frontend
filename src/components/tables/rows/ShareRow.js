@@ -7,29 +7,19 @@ import ChartModalPanel from "../../modals/Chart/ChartModalPanel";
 import BuyShareButtonWithModal from "../../buttons/BuyShareButtonWithModal";
 import SellShareButtonWithModal from "../../buttons/SellShareButtonWithModal";
 
-import { getCompanies } from "../../../logic/fetching";
-
 export default function ShareRow(props) {
   const { row } = props;
+  console.log(row);
   const [tag, setTag] = useState();
-
-  useEffect(() => {
-    getCompanies().then((data) => {
-      let tag = data.filter((company) => {
-        company[1].includes(row.name);
-      })[0];
-      setTag(tag);
-    });
-  }, []);
 
   return (
     <TableRow key={row.name}>
       <StyledTableCell>
         <ChartModalPanel tag={tag} name={row.name} />
-        <BuyShareButtonWithModal name={row.name} />
-        <SellShareButtonWithModal name={row.name} />
+        <BuyShareButtonWithModal name={row.name} isin={row.isin} />
+        <SellShareButtonWithModal name={row.name} isin={row.isin} />
       </StyledTableCell>
-      <StyledTableCell component="th" scope="row" >
+      <StyledTableCell component="th" scope="row">
         {row.name}
       </StyledTableCell>
       {row.params.map((cell) => (

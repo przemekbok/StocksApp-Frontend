@@ -47,7 +47,6 @@ const AddCredentialsPage = (props) => {
   };
 
   useEffect(() => {
-    console.log("jakie propsy?", props);
     props.initialize({ email, password });
   }, []);
 
