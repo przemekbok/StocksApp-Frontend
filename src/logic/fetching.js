@@ -1,6 +1,11 @@
 import axios from "axios";
 
-/**TODO: Change fetching mechanism to axios*/
+var gpwtraderApiUrl = "http://localhost:9001";
+var stooqApiUrl = "http://localhost:9000/stooqAPI";
+if (process.env.NODE_ENV === "production") {
+  gpwtraderApiUrl = process.env.REACT_APP_GPWT_API;
+  stooqApiUrl = process.env.REACT_APP_STOOQ_API;
+}
 
 export function getCompanies(page, size) {
   let query =
@@ -9,7 +14,7 @@ export function getCompanies(page, size) {
       : `?page=${page}&size=${size}`;
   return new Promise((resolve, reject) => {
     axios
-      .get("http://localhost:9001/companies" + query)
+      .get(`${gpwtraderApiUrl}/companies${query}`)
       .then((response) => {
         let rows = [];
         response.data.forEach((company) => {
@@ -27,7 +32,7 @@ export function getCompanies(page, size) {
 export function getHeader(type) {
   return new Promise((resolve, reject) => {
     axios
-      .get(`http://localhost:9001/headers?header=${type}`)
+      .get(`${gpwtraderApiUrl}/headers?header=${type}`)
       .then((response) => {
         resolve(response.data.fields);
       })
@@ -40,7 +45,7 @@ export function getHeader(type) {
 export function getCompanyData(tag, interval) {
   return new Promise((resolve, reject) => {
     axios
-      .get(`http://localhost:9000/stooqAPI?tag=${tag}&interval=${interval}`)
+      .get(`${stooqApiUrl}/stooqAPI?tag=${tag}&interval=${interval}`)
       .then((response) => {
         resolve(response);
       })
@@ -53,7 +58,7 @@ export function getCompanyData(tag, interval) {
 export function getBoughtShares() {
   return new Promise((resolve, reject) => {
     axios
-      .get(`http://localhost:9001/shares/`)
+      .get(`${gpwtraderApiUrl}/shares/`)
       .then((response) => response.data)
       .then((response) => resolve(response))
       .catch((err) => {
@@ -65,7 +70,7 @@ export function getBoughtShares() {
 export function getStatus() {
   return new Promise((resolve, reject) => {
     axios
-      .get(`http://localhost:9001/status/`)
+      .get(`${gpwtraderApiUrl}/status/`)
       .then((response) => response.data)
       .then((response) => resolve(response))
       .catch((err) => {
