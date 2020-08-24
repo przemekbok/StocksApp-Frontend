@@ -33,30 +33,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const StatusBar = (props) => {
-  console.log(props.status);
-  const { resources, wallet, rate } = props.status;
+  const { resources, wallet, rate } = props.status ? props.status : {};
   const classes = useStyles();
   return (
     <Box display="flex" justifyContent="flex-end" className={classes.container}>
-      <div className={classes["status-bar"]}>
-        Portfel: <div className={classes.big}>{resources}</div>
-      </div>
-      <div className={classes["status-bar"]}>
-        Razem: <div className={classes.big}>{wallet}</div>
-      </div>
-      <div className={classes["status-bar"]}>
-        Wynik:{" "}
-        <div
-          className={[
-            classes.big,
-            rate?.includes("-")
-              ? classes["rate-negative"]
-              : classes["rate-positive"],
-          ].join(" ")}
-        >
-          {rate}
+      {props.status ? (
+        <React.Fragment>
+          <div className={classes["status-bar"]}>
+            Portfel: <div className={classes.big}>{resources}</div>
+          </div>
+          <div className={classes["status-bar"]}>
+            Razem: <div className={classes.big}>{wallet}</div>
+          </div>
+          <div className={classes["status-bar"]}>
+            Wynik:{" "}
+            <div
+              className={[
+                classes.big,
+                rate?.includes("-")
+                  ? classes["rate-negative"]
+                  : classes["rate-positive"],
+              ].join(" ")}
+            >
+              {rate}
+            </div>
+          </div>
+        </React.Fragment>
+      ) : (
+        <div className={classes["status-bar"]}>
+          {
+            "To konto nie jest zchronizowane z serwisem GPWTr@der, dokończ synchronizację klikając w zakładkę "
+          }{" "}
+          <u className={classes.big}>DANE</u>
         </div>
-      </div>
+      )}
     </Box>
   );
 };

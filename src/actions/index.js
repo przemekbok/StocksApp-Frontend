@@ -10,12 +10,21 @@ import {
   BUY_SHARES,
   SELL_SHARES,
 } from "./types";
-//import { signUp } from "../logic/fetching";
+import {
+  update,
+  signUp,
+  signIn,
+  getCredentials,
+  setCredentials,
+  buyShares,
+  sellShares,
+} from "../logic/fetching";
 
 export const signUpAction = (data) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post("http://localhost:5000/users/signup", data);
+      //const res = await axios.post("http://localhost:5000/users/signup", data);
+      const res = await signUp(data);
 
       dispatch({
         type: AUTH_SIGN_UP,
@@ -28,7 +37,8 @@ export const signUpAction = (data) => {
       let getCred = getCredentialsAction();
       await getCred(dispatch);
       //update database when logged in
-      axios("http://localhost:9001/update");
+      //axios("http://localhost:9001/update");
+      update();
     } catch (err) {
       dispatch({
         type: AUTH_ERROR,
@@ -54,7 +64,8 @@ export const signOutAction = () => {
 export const signInAction = (data) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post("http://localhost:5000/users/signin", data);
+      //const res = await axios.post("http://localhost:5000/users/signin", data);
+      const res = await signIn(data);
 
       dispatch({
         type: AUTH_SIGN_IN,
@@ -68,7 +79,8 @@ export const signInAction = (data) => {
       await getCred(dispatch);
 
       //update database when logged in
-      axios("http://localhost:9001/update");
+      //axios("http://localhost:9001/update");
+      update();
     } catch (err) {
       dispatch({
         type: AUTH_ERROR,
@@ -82,8 +94,9 @@ export const signInAction = (data) => {
 export const getCredentialsAction = () => {
   return async (dispatch) => {
     try {
-      const res = await axios(`http://localhost:9001/credentials/get`); //token is provided via axios default
-      console.log(res.data);
+      //const res = await axios(`http://localhost:9001/credentials/get`); //token is provided via axios default
+      const res = await getCredentials();
+
       dispatch({
         type: CREDENTIALS_GET,
         payload: res.data,
@@ -104,17 +117,23 @@ export const setCredentialsAction = (data) => {
         data.email !== oldCredentials.email ||
         data.password !== oldCredentials.password
       ) {
-        const res = await axios
-          .post(
-            `http://localhost:9001/credentials/set`, //token is provided via axios.default
-            data
-          )
-          .then((response) => {
-            if (response) {
-              axios("http://localhost:9001/update");
-            }
-            return response;
-          });
+        // const res = await axios
+        //   .post(
+        //     `http://localhost:9001/credentials/set`, //token is provided via axios.default
+        //     data
+        //   )
+        //   .then((response) => {
+        //     if (response) {
+        //       axios("http://localhost:9001/update");
+        //     }
+        //     return response;
+        //   });
+        const res = await setCredentials(data).then((response) => {
+          if (response) {
+            update();
+          }
+          return response;
+        });
 
         dispatch({
           type: CREDENTIALS_SET,
@@ -124,7 +143,6 @@ export const setCredentialsAction = (data) => {
           localStorage.setItem("credentials", JSON.stringify(data));
         }
       }
-      //return res;
     } catch (err) {
       dispatch({
         type: CREDENTIALS_ERROR,
@@ -138,10 +156,11 @@ export const setCredentialsAction = (data) => {
 export const buySharesAction = (data) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post(
-        `http://localhost:9001/trade/buy`, //token is provided via axios.default
-        data
-      );
+      // const res = await axios.post(
+      //   `http://localhost:9001/trade/buy`, //token is provided via axios.default
+      //   data
+      // );
+      const res = await buyShares(data);
 
       dispatch({
         type: BUY_SHARES,
@@ -156,10 +175,11 @@ export const buySharesAction = (data) => {
 export const sellSharesAction = (data) => {
   return async (dispatch) => {
     try {
-      const res = await axios.post(
-        `http://localhost:9001/trade/sell`, //token is provided via axios.default
-        data
-      );
+      // const res = await axios.post(
+      //   `http://localhost:9001/trade/sell`, //token is provided via axios.default
+      //   data
+      // );
+      const res = await sellShares(data);
 
       dispatch({
         type: SELL_SHARES,

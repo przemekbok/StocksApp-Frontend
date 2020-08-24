@@ -83,12 +83,7 @@ export function getStatus() {
 }
 
 export function update() {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(`${gpwtraderApiUrl}/update`)
-      .then(() => resolve())
-      .catch((err) => reject(err));
-  });
+  axios.get(`${gpwtraderApiUrl}/update`);
 }
 
 export function signUp(data) {
@@ -102,7 +97,7 @@ export function signUp(data) {
   });
 }
 
-export function signIn() {
+export function signIn(data) {
   return new Promise((resolve, reject) => {
     axios
       .post(`${authApiUrl}/users/signin`, data)
@@ -140,7 +135,7 @@ export function buyShares(data) {
   });
 }
 
-export function sellShares() {
+export function sellShares(data) {
   return new Promise((resolve, reject) => {
     axios
       .post(`${gpwtraderApiUrl}/trade/sell`, data)
