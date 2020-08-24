@@ -140,7 +140,7 @@ function SellShareModal(props) {
                 activationLevel: values.activationLevel,
                 validityTime: values.validityTime,
               };
-              props.sellShares(data);
+              props.sellSharesAction(data);
             }}
           >
             {(props) => {

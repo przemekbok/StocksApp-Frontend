@@ -32,7 +32,7 @@ const SignIn = (props) => {
   const classes = useStyles();
   const { handleSubmit } = props;
   const onSubmit = async (formData) => {
-    props.signIn(formData).then(() => {
+    props.signInAction(formData).then(() => {
       if (!props.errorMessage) {
         props.history.push("/all-shares");
       }

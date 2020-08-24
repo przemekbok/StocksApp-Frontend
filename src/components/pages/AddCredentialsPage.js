@@ -43,7 +43,7 @@ const AddCredentialsPage = (props) => {
   const classes = useStyles();
   const { handleSubmit, email, password } = props;
   const onSubmit = (formData) => {
-    props.setCredentials(formData);
+    props.setCredentialsAction(formData);
   };
 
   useEffect(() => {

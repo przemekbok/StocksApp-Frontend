@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 const Header = (props) => {
   const classes = useStyles();
   const signOut = () => {
-    props.signOut();
+    props.signOutAction();
   };
   return (
     <div>

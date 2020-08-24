@@ -14,7 +14,6 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 
 import authGuard from "./components/HOCs/authGuard";
-import getCredentials from "./components/HOCs/getCredentials";
 import AllCompaniesPage from "./components/pages/AllCompaniesPage";
 import BoughtSharesPage from "./components/pages/BoughtSharesPage";
 import AddCredentialsPage from "./components/pages/AddCredentialsPage";

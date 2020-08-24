@@ -4,15 +4,15 @@ import {
   AUTH_SIGN_OUT,
   AUTH_SIGN_IN,
   AUTH_ERROR,
-  DASHBOARD_GET_DATA,
   CREDENTIALS_GET,
   CREDENTIALS_SET,
   CREDENTIALS_ERROR,
   BUY_SHARES,
   SELL_SHARES,
 } from "./types";
+//import { signUp } from "../logic/fetching";
 
-export const signUp = (data) => {
+export const signUpAction = (data) => {
   return async (dispatch) => {
     try {
       const res = await axios.post("http://localhost:5000/users/signup", data);
@@ -25,21 +25,20 @@ export const signUp = (data) => {
       localStorage.setItem("JWT_TOKEN", res.data.token);
       axios.defaults.headers.common["Authorization"] = res.data.token;
       //get credentials from database
-      let getCred = getCredentials();
+      let getCred = getCredentialsAction();
       await getCred(dispatch);
       //update database when logged in
       axios("http://localhost:9001/update");
     } catch (err) {
       dispatch({
         type: AUTH_ERROR,
-        payload: "Email is alredy in use",
+        payload: err,
       });
-      console.error("err", err);
     }
   };
 };
 
-export const signOut = () => {
+export const signOutAction = () => {
   return (dispatch) => {
     localStorage.removeItem("JWT_TOKEN");
     axios.defaults.headers.common["Authorization"] = "";
@@ -52,7 +51,7 @@ export const signOut = () => {
   };
 };
 
-export const signIn = (data) => {
+export const signInAction = (data) => {
   return async (dispatch) => {
     try {
       const res = await axios.post("http://localhost:5000/users/signin", data);
@@ -65,7 +64,7 @@ export const signIn = (data) => {
       localStorage.setItem("JWT_TOKEN", res.data.token);
       axios.defaults.headers.common["Authorization"] = res.data.token;
       //get credentials from database
-      let getCred = getCredentials();
+      let getCred = getCredentialsAction();
       await getCred(dispatch);
 
       //update database when logged in
@@ -80,24 +79,7 @@ export const signIn = (data) => {
   };
 };
 
-export const getSecret = () => {
-  return async (dispatch) => {
-    try {
-      const res = await axios("http://localhost:5000/users/secret");
-
-      dispatch({
-        type: DASHBOARD_GET_DATA,
-        payload: res.data.secret,
-      });
-
-      localStorage.setItem("JWT_TOKEN", res.data.token);
-    } catch (error) {
-      console.log("err", error);
-    }
-  };
-};
-
-export const getCredentials = () => {
+export const getCredentialsAction = () => {
   return async (dispatch) => {
     try {
       const res = await axios(`http://localhost:9001/credentials/get`); //token is provided via axios default
@@ -114,7 +96,7 @@ export const getCredentials = () => {
   };
 };
 
-export const setCredentials = (data) => {
+export const setCredentialsAction = (data) => {
   return async (dispatch) => {
     try {
       let oldCredentials = JSON.parse(localStorage.getItem("credentials"));
@@ -153,7 +135,7 @@ export const setCredentials = (data) => {
   };
 };
 
-export const buyShares = (data) => {
+export const buySharesAction = (data) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(
@@ -171,7 +153,7 @@ export const buyShares = (data) => {
   };
 };
 
-export const sellShares = (data) => {
+export const sellSharesAction = (data) => {
   return async (dispatch) => {
     try {
       const res = await axios.post(

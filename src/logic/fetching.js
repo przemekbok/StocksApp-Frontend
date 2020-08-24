@@ -1,5 +1,6 @@
 import axios from "axios";
 
+var authApiUrl = "http://localhost:5000";
 var gpwtraderApiUrl = "http://localhost:9001";
 var stooqApiUrl = "http://localhost:9000/stooqAPI";
 if (process.env.NODE_ENV === "production") {
@@ -78,5 +79,72 @@ export function getStatus() {
       .catch((err) => {
         reject(err);
       });
+  });
+}
+
+export function update() {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${gpwtraderApiUrl}/update`)
+      .then(() => resolve())
+      .catch((err) => reject(err));
+  });
+}
+
+export function signUp(data) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${authApiUrl}/users/signup`, data)
+      .then((response) => resolve(response))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export function signIn() {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${authApiUrl}/users/signin`, data)
+      .then((response) => resolve(response))
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export function getCredentials() {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${gpwtraderApiUrl}/credentials/get`)
+      .then((response) => resolve(response))
+      .catch((err) => reject(err));
+  });
+}
+
+export function setCredentials(data) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${gpwtraderApiUrl}/credentials/set`, data)
+      .then((response) => resolve(response))
+      .catch((err) => reject(err));
+  });
+}
+
+export function buyShares(data) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${gpwtraderApiUrl}/trade/buy`, data)
+      .then((response) => resolve(response))
+      .catch((err) => reject(err));
+  });
+}
+
+export function sellShares() {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`${gpwtraderApiUrl}/trade/sell`, data)
+      .then((response) => resolve(response))
+      .catch((err) => reject(err));
   });
 }
