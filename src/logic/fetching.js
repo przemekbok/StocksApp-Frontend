@@ -4,6 +4,9 @@ var authApiUrl = "http://localhost:5000";
 var gpwtraderApiUrl = "http://localhost:9001";
 var stooqApiUrl = "http://localhost:9000/stooqAPI";
 if (process.env.NODE_ENV === "production") {
+  authApiUrl = process.env.REACT_APP_ELECTRON
+    ? authApiUrl
+    : process.env.REACT_APP_AUTH_API;
   gpwtraderApiUrl = process.env.REACT_APP_ELECTRON
     ? gpwtraderApiUrl
     : process.env.REACT_APP_GPWT_API;
