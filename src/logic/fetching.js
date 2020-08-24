@@ -3,7 +3,9 @@ import axios from "axios";
 var gpwtraderApiUrl = "http://localhost:9001";
 var stooqApiUrl = "http://localhost:9000/stooqAPI";
 if (process.env.NODE_ENV === "production") {
-  gpwtraderApiUrl = process.env.REACT_APP_GPWT_API;
+  gpwtraderApiUrl = process.env.REACT_APP_ELECTRON
+    ? gpwtraderApiUrl
+    : process.env.REACT_APP_GPWT_API;
   stooqApiUrl = process.env.REACT_APP_STOOQ_API;
 }
 
