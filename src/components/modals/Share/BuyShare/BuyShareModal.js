@@ -140,9 +140,7 @@ function BuyShareModal(props) {
                 activationLevel: values.activationLevel,
                 validityTime: values.validityTime,
               };
-              props.buySharesAction(data).then(() => {
-                console.log("done");
-              });
+              props.buySharesAction(data).then(() => {});
             }}
           >
             {(props) => {

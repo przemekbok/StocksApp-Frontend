@@ -84,7 +84,14 @@ export function getStatus() {
 }
 
 export function update() {
-  axios.get(`${gpwtraderApiUrl}/update`);
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`${gpwtraderApiUrl}/update`)
+      .then((response) => resolve(response))
+      .catch((err) => {
+        reject(err);
+      });
+  });
 }
 
 export function signUp(data) {

@@ -63,7 +63,7 @@ function BoughtSharesPage(props) {
   }, [filter]);
 
   const handleChange = (event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       setFilter(event.target.value);
     }
   };
@@ -98,8 +98,8 @@ function BoughtSharesPage(props) {
     )
   ) : (
     <MessagePage
-      message='Nie podałeś danych do dostępu! Formularz znajdziesz w zakładce
-    \"credentials\"'
+      message="Nie podałeś danych do serwisu GPWTr@der! Formularz znajdziesz w zakładce"
+      link="dane"
     />
   );
 }

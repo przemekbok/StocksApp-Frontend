@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import TableRow from "@material-ui/core/TableRow";
 
@@ -9,7 +9,6 @@ import SellShareButtonWithModal from "../../buttons/SellShareButtonWithModal";
 
 export default function ShareRow(props) {
   const { row } = props;
-  console.log(row);
   const [tag, setTag] = useState();
 
   return (

@@ -4,6 +4,7 @@ import {
   AUTH_SIGN_OUT,
   AUTH_SIGN_IN,
   AUTH_ERROR,
+  STATUS_GET,
   CREDENTIALS_GET,
   CREDENTIALS_SET,
   CREDENTIALS_ERROR,
@@ -18,6 +19,7 @@ import {
   setCredentials,
   buyShares,
   sellShares,
+  getStatus,
 } from "../logic/fetching";
 
 export const signUpAction = (data) => {
@@ -91,6 +93,21 @@ export const signInAction = (data) => {
   };
 };
 
+export const getStatusAction = () => {
+  return async (dispatch) => {
+    try {
+      const res = await getStatus();
+
+      dispatch({
+        type: STATUS_GET,
+        payload: { status: res },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
 export const getCredentialsAction = () => {
   return async (dispatch) => {
     try {
@@ -130,7 +147,10 @@ export const setCredentialsAction = (data) => {
         //   });
         const res = await setCredentials(data).then((response) => {
           if (response) {
-            update();
+            update().then(async () => {
+              let getStatusActionFunc = getStatusAction();
+              await getStatusActionFunc(dispatch);
+            });
           }
           return response;
         });

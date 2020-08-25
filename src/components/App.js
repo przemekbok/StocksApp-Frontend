@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Header from "./Header";
 import StatusBar from "./StatusBar";
@@ -6,34 +6,29 @@ import StatusBar from "./StatusBar";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 
-import { update, getStatus } from "../logic/fetching";
+import { update } from "../logic/fetching";
 
 const App = (props) => {
-  const [status, setStatus] = useState({});
-  const [visibleStatus, setVisibleStatus] = useState(false);
+  const areCredentialsAvailable =
+    props.credentials.email && props.credentials.password;
   useEffect(() => {
     if (window.performance) {
       //update app from GPWTrader on page refresh
-      if (performance.navigation.type == 1) {
+      if (performance.navigation.type === 1) {
         update();
       }
     }
     if (props.isAuthenticated) {
-      getStatus().then((response) => {
-        if (response) {
-          setStatus(response);
-        } else {
-          setVisibleStatus(true);
-        }
-      });
+      props.getStatusAction();
     }
   }, []);
+
   return (
     <div>
       <Header />
       {props.isAuthenticated ? (
-        !visibleStatus ? (
-          <StatusBar status={status} />
+        areCredentialsAvailable ? (
+          <StatusBar status={props.status} />
         ) : (
           <StatusBar />
         )
@@ -45,6 +40,8 @@ const App = (props) => {
 
 function mapStateToProps(state) {
   return {
+    status: state.status,
+    credentials: state.credentials,
     isAuthenticated: state.auth.isAuthenticated,
   };
 }

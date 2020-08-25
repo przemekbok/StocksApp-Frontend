@@ -18,7 +18,7 @@ export default (state = DEFAULT_STATE, action) => {
         ...state,
         email: action.payload.email,
         password: action.payload.password,
-        isSet: true,
+        isSet: action.payload.email && action.payload.password ? true : false,
         errorMessage: "",
       };
     case CREDENTIALS_SET:

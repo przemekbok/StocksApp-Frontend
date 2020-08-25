@@ -1,9 +1,7 @@
 import React from "react";
-import { Box, Typography, makeStyles } from "@material-ui/core"; //this one imports default theme
+import { Box, makeStyles } from "@material-ui/core"; //this one imports default theme
 //import { makeStyles } from "@material-ui/styles";
 //**this one above doesnt import default theme */
-
-//const theme = createMuiTheme();
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -35,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const StatusBar = (props) => {
   const { resources, wallet, rate } = props.status ? props.status : {};
   const classes = useStyles();
+
   return (
     <Box display="flex" justifyContent="flex-end" className={classes.container}>
       {props.status ? (

@@ -10,6 +10,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
+  big: {
+    "font-weight": 1000,
+    padding: " 0 0 0 10px",
+    "text-transform": "uppercase",
+  },
 }));
 
 const MessagePage = (props) => {
@@ -18,6 +23,7 @@ const MessagePage = (props) => {
     <Container className={classes.container} fixed>
       <Typography variant="h4" gutterBottom>
         {props.message}
+        <u className={classes.big}>{props.link}</u>
       </Typography>
     </Container>
   );

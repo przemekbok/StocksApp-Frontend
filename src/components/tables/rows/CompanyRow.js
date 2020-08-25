@@ -9,7 +9,6 @@ import BuyShareButtonWithModal from "../../buttons/BuyShareButtonWithModal";
 
 export default function CompanyRow(props) {
   const { row } = props;
-  console.log(row);
   return (
     <TableRow key={row[0]}>
       <StyledTableCell>

@@ -53,7 +53,7 @@ function AllCompaniesPage() {
   }, [filter]);
 
   const handleChange = (event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       setFilter(event.target.value);
     }
   };

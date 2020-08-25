@@ -2,7 +2,7 @@ export function parseDataForChart(data) {
   return data.map((line) => {
     let dateAndTime = line.date.split(" ");
     let date = dateAndTime[0].match(/\d+/g);
-    if (dateAndTime[1] != undefined && dateAndTime[1] != "") {
+    if (dateAndTime[1] !== undefined && dateAndTime[1] !== "") {
       let time = dateAndTime[1].match(/\d+/g);
       line.date = new Date(
         date[0],

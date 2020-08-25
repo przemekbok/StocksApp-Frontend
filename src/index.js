@@ -19,8 +19,11 @@ import BoughtSharesPage from "./components/pages/BoughtSharesPage";
 import AddCredentialsPage from "./components/pages/AddCredentialsPage";
 
 const jwtToken = localStorage.getItem("JWT_TOKEN");
-const credentials = JSON.parse(localStorage.getItem("credentials"));
-console.log(credentials);
+const credentials = JSON.parse(localStorage.getItem("credentials")) ?? {
+  email: "",
+  password: "",
+};
+
 if (jwtToken != null) {
   axios.defaults.headers.common["Authorization"] = jwtToken;
 }
@@ -36,10 +39,14 @@ ReactDOM.render(
           token: jwtToken,
           isAuthenticated: jwtToken ? true : false,
         },
+        status: {
+          resources: "",
+          wallet: "",
+          rate: "",
+        },
         credentials: {
-          email: credentials ? credentials.email : "",
-          password: credentials ? credentials.password : "",
-          isSet: credentials ? true : false,
+          ...credentials,
+          isSet: credentials.email && credentials.password ? true : false,
         },
       },
       composeEnhancers(applyMiddleware(reduxThunk))
@@ -72,31 +79,3 @@ ReactDOM.render(
 );
 
 registerServiceWorker();
-
-function getStore() {
-  let result = {
-    auth: {
-      token: jwtToken,
-      isAuthenticated: jwtToken ? true : false,
-    },
-    credentials: {
-      email: "",
-      password: "",
-      isSet: false,
-    },
-  };
-  axios(`http://localhost:9001/credentials/get`)
-    .then((response) => {
-      let credentials = response.data;
-      result.credentials = {
-        email: credentials === undefined ? "" : credentials.email,
-        password: credentials === undefined ? "" : credentials.password,
-        isSet: credentials === undefined ? true : false,
-      };
-
-      return result;
-    })
-    .catch((err) => {
-      return result;
-    });
-}
